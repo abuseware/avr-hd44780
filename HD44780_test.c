@@ -32,14 +32,15 @@ ISR(TIMER1_COMPA_vect){
 }
 
 int main(void){
+  HD47780 *lcd;
 
   set_sleep_mode(SLEEP_MODE_IDLE);
 
-  lcd_init();
-  lcd_position(5, 0);
-  lcd_write_text("Uptime");
-  lcd_position(4, 1);
-  lcd_write_text("by Licho");
+  lcd = lcd_init(0x20);
+  lcd_position(lcd, 5, 0);
+  lcd_write_text(lcd, "Uptime");
+  lcd_position(lcd, 4, 1);
+  lcd_write_text(lcd, "by Licho");
 
   OCR1A = 31250; // 31250 (CTC) * 256 (Prescaler) = 8M
   TCCR1B |=
@@ -53,8 +54,10 @@ int main(void){
 
   while(1){
     sleep_mode();
-    lcd_position(0, 1);
-    lcd_write_text(buff);
+    lcd_position(lcd, 0, 1);
+    lcd_write_text(lcd, buff);
   }
+
+  lcd_free(lcd);
     
 }
