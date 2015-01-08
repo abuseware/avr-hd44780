@@ -1,5 +1,5 @@
-##Simple HD47780 library for Atmel AVR
-This library provides light API for using HD47780 LCD via I²C (PCF8574 I²C port multiplexer)
+##Simple HD44780 library for Atmel AVR
+This library provides light API for using HD44780 LCD via I²C (PCF8574 I²C port multiplexer)
 
 ##How to use it?
 Check example Makefile for build instructions.
