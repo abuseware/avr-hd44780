@@ -4,7 +4,7 @@
 #include <PCF8574.h>
 #include "HD44780.h"
 
-static void lcd_write_nibble(HD47780 *device, uint8_t data){
+static void lcd_write_nibble(HD44780 *device, uint8_t data){
   uint8_t i;
 
   for(i = 0; i < 4; i++){
@@ -16,7 +16,7 @@ static void lcd_write_nibble(HD47780 *device, uint8_t data){
   }
 }
 
-static void lcd_write(HD47780 *device, uint8_t data){
+static void lcd_write(HD44780 *device, uint8_t data){
   lcd_write_nibble(device, data >> 4);
   pcf8574_pin_blink(device, HD44780_E);
   
@@ -25,39 +25,39 @@ static void lcd_write(HD47780 *device, uint8_t data){
   
 }
 
-void lcd_write_command(HD47780 *device, uint8_t data){
+void lcd_write_command(HD44780 *device, uint8_t data){
   pcf8574_pin_off(device, HD44780_RS);
   lcd_write(device, data);
 }
 
-void lcd_write_data(HD47780 *device, uint8_t data){
+void lcd_write_data(HD44780 *device, uint8_t data){
   pcf8574_pin_on(device, HD44780_RS);
   lcd_write(device, data);
 }
 
-void lcd_write_text(HD47780 *device, char *data){
+void lcd_write_text(HD44780 *device, char *data){
   while(*data)
     lcd_write_data(device, *data++);
 }
 
-void lcd_position(HD47780 *device, uint8_t x, uint8_t y){
+void lcd_position(HD44780 *device, uint8_t x, uint8_t y){
   lcd_write_command(device, HD44780_DDRAM_SET | (x + (0x40 * y)));
 }
 
-void lcd_clear(HD47780 *device){
+void lcd_clear(HD44780 *device){
   lcd_write_command(device, HD44780_CLEAR);
   _delay_ms(2);
 }
 
-void lcd_home(HD47780 *device){
+void lcd_home(HD44780 *device){
   lcd_write_command(device, HD44780_HOME);
   _delay_ms(2);
 }
 
-HD47780 *lcd_init(uint8_t addr){
+HD44780 *lcd_init(uint8_t addr){
   uint8_t i;
 
-  HD47780 *device = pcf8574_init(addr);
+  HD44780 *device = pcf8574_init(addr);
 
   for(i = 0; i < 3; i++) {
     lcd_write_nibble(device, 0x03);
@@ -78,6 +78,6 @@ HD47780 *lcd_init(uint8_t addr){
   return device;
 }
 
-void lcd_free(HD47780 *device){
+void lcd_free(HD44780 *device){
   pcf8574_free(device);
 }

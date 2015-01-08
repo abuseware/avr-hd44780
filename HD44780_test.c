@@ -32,7 +32,7 @@ ISR(TIMER1_COMPA_vect){
 }
 
 int main(void){
-  HD47780 *lcd;
+  HD44780 *lcd;
 
   set_sleep_mode(SLEEP_MODE_IDLE);
 
