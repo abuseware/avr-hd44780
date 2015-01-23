@@ -7,7 +7,7 @@
 
 char buff[16];
 
-ISR(TIMER1_COMPA_vect){
+ISR(TIMER2_OVF_vect){
 
   static uint8_t overflow, w, d, h, m, s;
 
@@ -42,11 +42,9 @@ int main(void){
   lcd_position(lcd, 4, 1);
   lcd_write_text(lcd, "by Licho");
 
-  OCR1A = 31250; // 31250 (CTC) * 256 (Prescaler) = 8M
-  TCCR1B |=
-    (1 << WGM12) | // Timer1 Mode 4 (CTC on OCR1A)
-    (1 << CS12); //Timer1 Prescaler 256
-  TIMSK |= (1 << OCIE1A); //Interrupt on match
+  ASSR |= (1<< AS2); //Timer2 asyncrhonous from 32.768kHz on XTAL
+  TCCR2 |= (1 << CS22 | 1 << CS20); //Timer2 with XTAL/128
+  TIMSK |= (1 << TOIE2); //Interrupt on match
   
   sei();
   
