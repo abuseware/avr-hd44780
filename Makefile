@@ -1,12 +1,13 @@
 CFLAGS=-Os -std=c99 -pedantic -mmcu=atmega8a -DF_CPU=8000000UL
 
-all: bin hex
+all: lib test
 
-bin:
-	avr-gcc ${CFLAGS} -IPCF8574 -IPCF8574/I2C  PCF8574/I2C/I2C.c  PCF8574/PCF8574.c HD44780.c HD44780_test.c -o HD44780_test.bin
+lib:
+	avr-gcc ${CFLAGS} -c -IPCF8574 HD44780.c -o HD44780.o
 
-hex:
+test: lib
+	avr-gcc ${CFLAGS} -IPCF8574 PCF8574/I2C/I2C.o PCF8574/PCF8574.o HD44780.o HD44780_test.c -o HD44780_test.bin
 	avr-objcopy -O ihex HD44780_test.bin HD44780_test.hex
 
-flash:
+flash: test
 	avrdude -c usbasp -p m8 -U flash:w:HD44780_test.hex
