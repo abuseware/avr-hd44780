@@ -60,6 +60,8 @@ void lcd_write_command(HD44780 *device, uint8_t data);
 void lcd_write_data(HD44780 *device, uint8_t data);
 void lcd_write_text(HD44780 *device, char * data);
 
+void lcd_set_char(HD44780 *device, uint8_t index, uint8_t *data);
+
 void lcd_position(HD44780 *device, uint8_t x, uint8_t y);
 void lcd_clear(HD44780 *device);
 void lcd_home(HD44780 *device);
