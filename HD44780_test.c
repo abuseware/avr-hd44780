@@ -6,6 +6,8 @@
 #include "HD44780.h"
 
 char buff[16];
+uint8_t char_array_left[8] = {0x2,0x6,0xa,0x12,0xa,0x6,0x2,0x0};
+uint8_t char_array_right[8] = {0x8,0xc,0xa,0x9,0xa,0xc,0x8,0x0};
 
 ISR(TIMER2_OVF_vect){
 
@@ -37,8 +39,14 @@ int main(void){
   set_sleep_mode(SLEEP_MODE_IDLE);
 
   lcd = lcd_init(0x20);
-  lcd_position(lcd, 5, 0);
-  lcd_write_text(lcd, "Uptime");
+  lcd_set_char(lcd, 0, char_array_left);
+  lcd_set_char(lcd, 1, char_array_right);
+  
+  lcd_position(lcd, 3, 0);
+  lcd_write_data(lcd, 0);
+  lcd_write_text(lcd, " Uptime ");
+  lcd_write_data(lcd, 1);
+  
   lcd_position(lcd, 4, 1);
   lcd_write_text(lcd, "by Licho");
 

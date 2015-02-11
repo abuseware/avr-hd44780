@@ -40,6 +40,15 @@ void lcd_write_text(HD44780 *device, char *data){
     lcd_write_data(device, *data++);
 }
 
+void lcd_set_char(HD44780 *device, uint8_t index, uint8_t *data){
+  if(index > 7) return;
+  
+  lcd_write_command(device, HD44780_CGRAM_SET | (index * 8));
+  for(uint8_t i = 0; i < 8; i++){
+    lcd_write_data(device, data[i]);
+  }
+}
+
 void lcd_position(HD44780 *device, uint8_t x, uint8_t y){
   lcd_write_command(device, HD44780_DDRAM_SET | (x + (0x40 * y)));
 }
