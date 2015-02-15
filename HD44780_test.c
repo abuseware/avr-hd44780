@@ -3,9 +3,13 @@
 #include <avr/sleep.h>
 #include <util/delay.h>
 #include <stdio.h>
+#include <string.h>
 #include "HD44780.h"
 
-char buff[16];
+HD44780 *lcd;
+
+char timer[16];
+
 uint8_t char_array_left[8] = {0x2,0x6,0xa,0x12,0xa,0x6,0x2,0x0};
 uint8_t char_array_right[8] = {0x8,0xc,0xa,0x9,0xa,0xc,0x8,0x0};
 
@@ -30,25 +34,20 @@ ISR(TIMER2_OVF_vect){
     }
   }
 
-  sprintf(buff, "%s%uw %ud %02u%s%02u%s%02u", overflow ? "+" : " ", w, d, h, (s % 2) ? ":" : " ", m, (s % 2) ? ":" : " ", s);
+  sprintf(timer, "%s%uw %ud %02u%s%02u%s%02u", overflow ? "+" : " ", w, d, h, (s % 2) ? ":" : " ", m, (s % 2) ? ":" : " ", s);
+  lcd_update(lcd, 1, 0, timer, 15);
 }
 
 int main(void){
-  HD44780 *lcd;
-
   set_sleep_mode(SLEEP_MODE_IDLE);
 
   lcd = lcd_init(0x20);
-  lcd_set_char(lcd, 0, char_array_left);
-  lcd_set_char(lcd, 1, char_array_right);
-  
-  lcd_position(lcd, 3, 0);
-  lcd_write_data(lcd, 0);
-  lcd_write_text(lcd, " Uptime ");
-  lcd_write_data(lcd, 1);
-  
-  lcd_position(lcd, 4, 1);
-  lcd_write_text(lcd, "by Licho");
+  lcd_set_char(lcd, 1, char_array_left);
+  lcd_set_char(lcd, 2, char_array_right);
+
+  lcd_update(lcd, 0, 3, "\1 Uptime \2", 10);
+  lcd_update(lcd, 1, 4, "by Licho", 8);
+  lcd_refresh(lcd);
 
   ASSR |= (1<< AS2); //Timer2 asyncrhonous from 32.768kHz on XTAL
   TCCR2 |= (1 << CS22 | 1 << CS20); //Timer2 with XTAL/128
@@ -60,8 +59,7 @@ int main(void){
 
   while(1){
     sleep_mode();
-    lcd_position(lcd, 0, 1);
-    lcd_write_text(lcd, buff);
+    lcd_refresh(lcd);
   }
 
   lcd_free(lcd);
