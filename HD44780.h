@@ -4,7 +4,9 @@
 #include <PCF8574.h>
 
 //Config
-#define HD44780_ADDR 0x20
+#define HD44780_LINES 2
+#define HD44780_CHARS 16
+
 #define HD44780_RS   0
 #define HD44780_E    1
 #define HD44780_DATA 4
@@ -50,18 +52,18 @@
 #define HD44780_DDRAM_SET 0x80
 
 //Types
-typedef PCF8574 HD44780;
+typedef struct {
+  PCF8574 *controller;
+  char buffer[HD44780_LINES][HD44780_CHARS];
+} HD44780;
 
 //Functions
 HD44780 *lcd_init(uint8_t addr);
 void lcd_free(HD44780 *device);
 
-void lcd_write_command(HD44780 *device, uint8_t data);
-void lcd_write_data(HD44780 *device, uint8_t data);
-void lcd_write_text(HD44780 *device, char * data);
-
 void lcd_set_char(HD44780 *device, uint8_t index, uint8_t *data);
+void lcd_update(HD44780 *device, uint8_t y, uint8_t x, char *data, uint8_t length);
 
-void lcd_position(HD44780 *device, uint8_t x, uint8_t y);
+void lcd_refresh(HD44780 *device);
 void lcd_clear(HD44780 *device);
 void lcd_home(HD44780 *device);
