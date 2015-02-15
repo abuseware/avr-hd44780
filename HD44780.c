@@ -21,10 +21,10 @@ static void lcd_write_nibble(HD44780 *device, uint8_t data){
 static void lcd_write(HD44780 *device, uint8_t data){
   lcd_write_nibble(device, data >> 4);
   pcf8574_pin_blink(device->controller, HD44780_E);
-  
+
   lcd_write_nibble(device, data);
   pcf8574_pin_blink(device->controller, HD44780_E);
-  
+
 }
 
 static void lcd_write_command(HD44780 *device, uint8_t data){
@@ -39,7 +39,7 @@ static void lcd_write_data(HD44780 *device, uint8_t data){
 
 void lcd_set_char(HD44780 *device, uint8_t index, uint8_t *data){
   if(index > 7) return;
-  
+
   lcd_write_command(device, HD44780_CGRAM_SET | (index * 8));
   for(uint8_t i = 0; i < 8; i++){
     lcd_write_data(device, data[i]);
@@ -47,6 +47,9 @@ void lcd_set_char(HD44780 *device, uint8_t index, uint8_t *data){
 }
 
 void lcd_update(HD44780 *device, uint8_t y, uint8_t x, char *data, uint8_t length){
+  if(length == 0){
+    length = strlen(data);
+  }
   memcpy(&device->buffer[y][x], data, length);
 }
 
@@ -84,7 +87,7 @@ HD44780 *lcd_init(uint8_t addr){
   lcd_write_nibble(device, 0x02);
   pcf8574_pin_blink(device->controller, HD44780_E);
   _delay_ms(2);
-  
+
   lcd_write_command(device, HD44780_FUNCTION_SET | HD44780_FONT5x7 | HD44780_TWO_LINE | HD44780_4_BIT);
   lcd_write_command(device, HD44780_DISPLAY_ONOFF | HD44780_DISPLAY_OFF);
   lcd_write_command(device, HD44780_CLEAR);
