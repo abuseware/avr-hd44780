@@ -11,4 +11,4 @@ test: lib
 	avr-objcopy -O ihex HD44780_test.bin HD44780_test.hex
 
 flash: test
-	avrdude -c usbasp -p m8 -U flash:w:HD44780_test.hex
+	avrdude -q -c usbasp -p m8 -U flash:w:HD44780_test.hex
