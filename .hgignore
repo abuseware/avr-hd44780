@@ -1,3 +1,4 @@
+syntax: glob
 PCF8574
 *~
 *.o
