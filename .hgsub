@@ -1,1 +1,1 @@
-PCF8574 = [git]https://github.com/abuseware/avr-pcf8574
+PCF8574 = [hg]https://bitbucket.org/licho/avr-pcf8574
