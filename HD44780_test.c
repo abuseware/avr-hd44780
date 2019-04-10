@@ -50,8 +50,8 @@ int main(void){
   lcd_refresh(lcd);
 
   ASSR |= (1<< AS2); //Timer2 asyncrhonous from 32.768kHz on XTAL
-  TCCR2 |= (1 << CS22 | 1 << CS20); //Timer2 with XTAL/128
-  TIMSK |= (1 << TOIE2); //Interrupt on match
+  TCCR2A |= (1 << CS22 | 1 << CS20); //Timer2 with XTAL/128
+  TIMSK0 |= (1 << TOIE2); //Interrupt on match
   
   sei();
   
